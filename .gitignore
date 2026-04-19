@@ -36,3 +36,11 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# Local-only website output folders (not submodules, not committed to output repo)
+websites/hrexposed-site/
+websites/convertisseur-en-ligne-site/
+websites/unit-converter-site/
+websites/seo-audits/
+websites/catalystworks-hyperframes/
+hyperframes/
