@@ -47,3 +47,9 @@ hyperframes/
 
 # Local-only Claude Code session cost ledger (machine-local, never sync)
 session_log.jsonl
+
+# Archived site folders (kept locally, not synced)
+websites/*.ARCHIVED/
+
+# Sites with their own standalone GitHub repo (tracked there, not here)
+websites/humanatwork-site/
