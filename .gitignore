@@ -44,3 +44,6 @@ websites/unit-converter-site/
 websites/seo-audits/
 websites/catalystworks-hyperframes/
 hyperframes/
+
+# Local-only Claude Code session cost ledger (machine-local, never sync)
+session_log.jsonl
