@@ -53,3 +53,6 @@ websites/*.ARCHIVED/
 
 # Sites with their own standalone GitHub repo (tracked there, not here)
 websites/humanatwork-site/
+websites/signal-works-demo-dental/
+websites/signal-works-demo-hvac/
+websites/signal-works-demo-roofing/
