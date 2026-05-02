@@ -1,0 +1,60 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+.vercel
+
+# Local-only website output folders (not submodules, not committed to output repo)
+websites/hrexposed-site/
+websites/convertisseur-en-ligne-site/
+websites/unit-converter-site/
+websites/seo-audits/
+websites/catalystworks-hyperframes/
+hyperframes/
+
+# Local-only Claude Code session cost ledger (machine-local, never sync)
+session_log.jsonl
+
+# Archived site folders (kept locally, not synced)
+websites/*.ARCHIVED/
+
+# Sites with their own standalone GitHub repo (tracked there, not here)
+websites/humanatwork-site/
+websites/signal-works-demo-dental/
+websites/signal-works-demo-hvac/
+websites/signal-works-demo-roofing/
+websites/geolisted-site/
+websites/signal-works-landing/
