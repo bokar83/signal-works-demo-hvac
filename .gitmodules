@@ -10,3 +10,9 @@
 [submodule "apps/signal-works-rod-app"]
 	path = apps/signal-works-rod-app
 	url = https://github.com/bokar83/signal-works-rod-app.git
+[submodule "websites/boubacarbarry-site"]
+	path = websites/boubacarbarry-site
+	url = https://github.com/bokar83/boubacarbarry-site.git
+[submodule "websites/catalystworks-site"]
+	path = websites/catalystworks-site
+	url = https://github.com/bokar83/catalystworks-site.git
