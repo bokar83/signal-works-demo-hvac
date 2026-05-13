@@ -1,0 +1,12 @@
+[submodule "apps/baobab-app"]
+	path = apps/baobab-app
+	url = https://github.com/bokar83/baobab-app.git
+[submodule "apps/calculatorz-app"]
+	path = apps/calculatorz-app
+	url = https://github.com/bokar83/calculatorz-app.git
+[submodule "apps/elevate-rebuild-app"]
+	path = apps/elevate-rebuild-app
+	url = https://github.com/bokar83/elevate-rebuild-app.git
+[submodule "apps/signal-works-rod-app"]
+	path = apps/signal-works-rod-app
+	url = https://github.com/bokar83/signal-works-rod-app.git
