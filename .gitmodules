@@ -16,3 +16,6 @@
 [submodule "websites/catalystworks-site"]
 	path = websites/catalystworks-site
 	url = https://github.com/bokar83/catalystworks-site.git
+[submodule "apps/haw-preview-2026-05-17-app"]
+	path = apps/haw-preview-2026-05-17-app
+	url = https://github.com/bokar83/haw-preview-2026-05-17-app.git
