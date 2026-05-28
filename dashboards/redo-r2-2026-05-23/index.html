@@ -1,0 +1,402 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Redo Round 2 - 2026-05-23</title>
+<link rel="icon" type="image/jpeg" href="https://catalystworks.consulting/wp-content/uploads/2025/02/cw-favicon.jpg"/>
+</head><body style="margin:0;padding:0;background:#0a0a0a;color:#f0f0f0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5">
+<header style="position:sticky;top:0;background:rgba(10,10,10,0.97);backdrop-filter:blur(8px);padding:14px 16px;z-index:100;border-bottom:1px solid #222">
+<div style="display:flex;align-items:center;gap:10px;max-width:900px;margin:0 auto;flex-wrap:wrap">
+<div style="font-size:17px;font-weight:600">Redo Round 2</div>
+<div style="font-size:13px;color:#888">10 rewritten &middot; avg 86.3/100 &middot; <span style="color:#4ade80">3 default-approved</span> / <span style="color:#ef4444">7 default-redo (personal &lt;90)</span></div>
+<div style="flex:1"></div>
+<button id="exportBtn" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer">Export</button>
+</div>
+<div style="max-width:900px;margin:8px auto 0;font-size:12px;color:#888">Personal posts (LinkedIn/X/Beehiiv) <90 = REDO default per your rule. Brand posts (1stGen/HAW) approved regardless. Override anything.</div>
+</header>
+<main style="max-width:900px;margin:0 auto;padding:16px">
+<article data-key="368bcf1a-3029-81c6-92ac-e6e28ab37c60" data-default="approved" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#4ade80;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">92/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">Beehiiv</div>
+</div>
+<a href="https://www.notion.so/Building-an-agentic-AI-strategy-that-pays-off-without-risking-business-failure-368bcf1a302981c692ace6e28ab37c60" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: Building an agentic AI strategy that pays off - without risking business failure</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 24 &middot; truth_trace 20 &middot; hook_quality 13 &middot; differentiator_anchor 15 &middot; structural_soundness 10 &middot; signal_density 9 &middot; cta_fit 1</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">4 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; All 5 receipts present: kill-switch + verdict-router + publish_events + smoke-test gate + branch-guard daemon<br/>&middot; Long-form structure earns the length<br/>&middot; &#x27;prayer not a pilot&#x27; CTA = sticky<br/>&middot; Strongest differentiator-anchor of the 10</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #4ade80;margin-bottom:12px;line-height:1.55">Most agentic AI strategies fail in the same place. The pilot ships. The demo wows the room. Six weeks later, nobody on the team can tell you what the agents are actually doing in production. The roadmap quietly drops the word agentic.
+
+I have run that exact loop on my own systems and rebuilt it three times. Here is what survives the second month.
+
+## Start with one outcome, not a tool
+
+On agentsHQ the first outcome I held the system to was simple: every link I drop in a chat becomes a triaged candidate I can decide on from my phone in under ten seconds. Everything else (the classifier, the dispatcher, the scout adapters, the dashboard, the Telegram button with the approve and reject inline keyboard) existed to serve that one job. When a piece did not, I cut it.
+
+Outcome-first is the only filter that survives the second month. Tool-first projects collapse when the model gets cheaper, faster, or different. Outcome-first projects swap tools and keep going.
+
+## Build the kill-switch before you build the agent
+
+The first thing I write for any new autonomous loop is the halt path. A flag file in version control. Commit it, push it, and every cron sees the flag on the next tick and skips with a Telegram alert. Reversible in one command. No console access required. No on-call page in the middle of a Sunday dinner.
+
+The kill-switch is not a fallback. It is the permission slip that lets me trust the rest of the system to run while I sleep.
+
+## Put a verdict-router in front of every write
+
+Agents that can edit anything will eventually edit the wrong thing. The router I shipped this month classifies every file change into a tier before it lands.
+
+- Tier A (memory, audits, decisions, playbooks): append-only. Block on the wrong shape of edit.
+- Tier B (code, HTML, voiced content): advisory. Log and notice.
+- Tier C (config, settings, SOP files): notice only, with a strict-mode flag for the paranoid case.
+
+The boundary lives in the pre-commit hook, not in a human review. Reviews are too slow and too sparse to be the boundary. The hook fires on every commit, no exceptions.
+
+## Log every outbound action with an approver column
+
+I shipped a publish_events Postgres table that captures every send from every agent. Timestamp, channel, audience, payload, who approved it, the gate that let it through. Without that log, governance is a story you tell after an incident. With it, governance is a query you can run before one.
+
+When something goes wrong (and it will), the first move is not a panicked code-read. It is a select statement.
+
+## Build the reconstruction path before you build the speed
+
+Speed without reproducibility is debt with extra steps. Before I let agentsHQ run unattended overnight, I wrote a branch-guard daemon that polls the VPS every five minutes and Telegrams me if the production HEAD drifts off main. It has caught one real drift event so far. The cost of that daemon was an afternoon. The cost of not having it would have been a Monday morning explaining a phantom deploy.
+
+## What this adds up to
+
+Agentic strategy is not a model selection problem. It is a boundary engineering problem. The agents are the smallest piece. The kill-switch, the verdict-router, the publish-events log, the smoke-test gate, the branch-guard daemon, the reply-pause gate inside the sequence engine that catches the lead who already replied: those are the system.
+
+Build them in that order. Ship the smallest version that works. Then let the agent run.
+
+If your agentic pilot does not have a kill-switch you can fire from your phone, you do not have a pilot. You have a prayer.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="356bcf1a-3029-8120-9a73-ea74a66841b2" data-default="approved" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">89/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">humanatwork.ai (BRAND)</div>
+</div>
+<a href="https://www.notion.so/AI-isn-t-taking-jobs-It-s-taking-something-worse-356bcf1a302981209a73ea74a66841b2" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: AI isn’t taking jobs. It’s taking something worse.</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 24 &middot; truth_trace 17 &middot; hook_quality 14 &middot; differentiator_anchor 13 &middot; structural_soundness 10 &middot; signal_density 8 &middot; cta_fit 3</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">3 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; Tight, declarative hook -- highest scroll-stop potential of the 10<br/>&middot; &#x27;burning a week on a deliverable I did not understand&#x27; = earned/self-implicating<br/>&middot; CTA = mirror (&#x27;take it back for one round / notice what comes back online&#x27;) = wit + wisdom</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">AI is not taking your job. It is taking the part of your job you used to think with.
+
+The draft you used to write to figure out what you believed. The email you used to compose to clarify the ask. The outline you used to build to understand the shape of the work. Those were not chores. Those were thinking. Outsource all three and you stop noticing what you actually know.
+
+My rule, after burning a week on a deliverable I did not understand because an agent wrote the first pass for me: I write the rough version first. Then I run it through an agent for sharpening. Never the other way around. First pass is mine. Polish is the tool&#x27;s. That order keeps the thinking with the human and the editing with the machine.
+
+Pick one task this week that AI took from you. Take it back for one round. Notice what comes back online.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="366bcf1a-3029-8154-a123-c698f62b943e" data-default="redo" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">88/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">LinkedIn</div>
+<div style="background:#7f1d1d;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600">DEFAULT REDO</div>
+</div>
+<a href="https://www.notion.so/85-of-workers-can-t-connect-AI-training-to-their-job-366bcf1a30298154a123c698f62b943e" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: 85% of workers can’t connect AI training to their job</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 23 &middot; truth_trace 19 &middot; hook_quality 13 &middot; differentiator_anchor 14 &middot; structural_soundness 9 &middot; signal_density 9 &middot; cta_fit 1</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">2 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; CTA is imperative command (&#x27;Stop counting...&#x27;) -- ok, not weak, but not mirror/wit/wisdom either<br/>&middot; Concrete kill-switch + verdict-router receipts (truth-trace solid)</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">If 85 percent of your team cannot tell you which task this AI training touches, the training is not training. It is theater.
+
+Generic AI courses teach the tool. They never sit next to the person who runs the Tuesday afternoon workflow that actually pays the bills.
+
+What I do instead inside Catalyst Works engagements:
+
+1. Pick one task the operator owns end-to-end. The one that ate a Saturday last month.
+2. Sit beside them. Build the prompt, the human check, and the fallback together.
+3. Leave a working script behind. Commit it to their repo. Wire a kill-switch flag so they can halt it from their phone if it goes sideways.
+4. Next week, the next task.
+
+The script is the training. The training is the residue of the work, not a slide deck handed out before lunch.
+
+On agentsHQ I shipped a verdict-router pre-commit hook that classifies every file change into Tier A, B, or C before it lands. Memory and audits are append-only. Code is advisory. Config gets a notice. That same shape, scaled down, is what I leave inside an operator&#x27;s workflow. A guardrail they did not have on Monday and now own on Friday.
+
+If your AI training program does not produce a working artifact in the room, it is a webinar. Stop counting webinars as training.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="364bcf1a-3029-81d9-86dd-d0bfed335752" data-default="redo" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">88/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">LinkedIn</div>
+<div style="background:#7f1d1d;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600">DEFAULT REDO</div>
+</div>
+<a href="https://www.notion.so/The-Small-Businesses-Already-Replacing-Workers-With-AI-364bcf1a302981d986ddd0bfed335752" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: The Small Businesses Already Replacing Workers With AI</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 24 &middot; truth_trace 19 &middot; hook_quality 13 &middot; differentiator_anchor 14 &middot; structural_soundness 9 &middot; signal_density 9 &middot; cta_fit 0</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">3 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; Reply-pause gate receipt = real (logged in feedback_reply_pause_gate_pattern.md)<br/>&middot; &#x27;cringe email&#x27; line = voice-true<br/>&middot; CTA ends as question-statement hybrid -- borderline</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">Most coverage of small businesses using AI frames it as replacement. The reality I see inside my own operation is closer to expansion.
+
+I run more outbound than I could as a solo human. I publish across multiple brands. I review code I never wrote because an agent drafted the diff and I check it before it merges. Last week a reply-pause gate I shipped inside the sequence engine quietly stopped a follow-up from going to a lead who had already replied. No human caught it. The gate did. That is one fewer cringe email I would have sent on a Tuesday morning.
+
+What got replaced is not a person. It is the version of me that spent Sunday afternoons reformatting LinkedIn posts and double-checking suppression lists by hand.
+
+The honest framing is capacity. A solo operator with a working agent stack can hold the surface area of a small team without the overhead of becoming one. The catch is that the operator has to build the guardrails first. Kill-switch flag. Smoke-test before any new source goes live. Pre-publish guards that reject blank media and LLM refusal text before it ships. The agents are the easy part. The boundary work is the job.
+
+If you are evaluating AI for your business, the question is not who you replace. It is what becomes possible that justifies you staying small longer.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="366bcf1a-3029-8131-afe9-dc43d1f7fe45" data-default="redo" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">87/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">LinkedIn</div>
+<div style="background:#7f1d1d;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600">DEFAULT REDO</div>
+</div>
+<a href="https://www.notion.so/AI-Transformation-Is-a-Workforce-Transformation-366bcf1a30298131afe9dc43d1f7fe45" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: AI Transformation Is a Workforce Transformation</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 23 &middot; truth_trace 18 &middot; hook_quality 13 &middot; differentiator_anchor 14 &middot; structural_soundness 8 &middot; signal_density 9 &middot; cta_fit 2</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">3 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; publish_events + approver column receipt = real<br/>&middot; &#x27;decorating&#x27; CTA lands as wit/sting<br/>&middot; &#x27;Pay them more&#x27; = earned opinion, not consultant-speak</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">Most AI transformation budgets buy software. Most AI transformation failures come from the people the software was supposed to help.
+
+I have watched the same loop across operators and growing teams. Tools land. Training is generic. Nobody on the floor changes how they actually work on a Wednesday. Six months later, a leader pulls the plug and blames the model.
+
+The real transformation is who owns what. Which decisions move from a person to a system. Which reviews stay human. Which roles get redesigned around the new capacity. That is workforce work. It does not happen inside a procurement cycle.
+
+What I do with operators: redesign one role per quarter. Map the tasks. Cut the ones AI can carry safely. Promote the human into the higher-judgment version of their own job. Pay them more, because the work is now harder and more valuable, not less.
+
+Inside my own stack, agentsHQ does the work of three people I never hired. A scout drains my inbox. A classifier triages every link I drop. A publish-events table logs every outbound send with an approver column, so governance is a query I can run, not a story I tell at the end of the quarter. None of that replaced a human. It replaced the version of me that lost Sundays to copy-pasting.
+
+If your AI plan does not change a single job description, you are not transforming. You are decorating.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="35dbcf1a-3029-81c5-9093-c235623f272d" data-default="redo" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">87/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">Beehiiv</div>
+<div style="background:#7f1d1d;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600">DEFAULT REDO</div>
+</div>
+<a href="https://www.notion.so/You-Cannot-Fire-Workers-To-Replace-Them-With-AI-funfact-35dbcf1a302981c59093c235623f272d" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: You Cannot Fire Workers To Replace Them With AI #funfact</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 23 &middot; truth_trace 19 &middot; hook_quality 12 &middot; differentiator_anchor 14 &middot; structural_soundness 10 &middot; signal_density 9 &middot; cta_fit 0</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">4 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; Kill-switch + publish_events receipts present<br/>&middot; &#x27;arithmetic is asymmetric&#x27; line = quotable/screenshottable<br/>&middot; &#x27;70 percent clean / 30 percent tail&#x27; = specific stat (verify or soften)<br/>&middot; CTA = aphoristic statement, lands well</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">The headline assumption I keep seeing is that AI lets you fire workers and pocket the difference. The math rarely survives contact with reality.
+
+Here is what actually happens. A team replaces a function with a model. The model handles 70 percent of cases cleanly. The remaining 30 percent require judgment, context, and the institutional memory of the person who got let go. The operations lead is now doing the work the model could not, with none of the original context, and customers are noticing the gap.
+
+## What works instead
+
+I run a multi-agent stack as a solo operator. Nobody got fired to make this exist. The work it does is work I could not previously do at all. Outbound at the volume of a small sales team. Content across multiple brands. Pre-commit gates that catch the kind of bugs that used to cost me a Saturday.
+
+The expansion framing is more honest than the replacement framing. AI lets one operator hold surface area that previously required a team. It does not let a team shrink by the same headcount and produce the same output. The arithmetic is asymmetric.
+
+## Why the replacement story keeps getting told
+
+Two reasons. It sells consulting. And it gives executives a clean number to put in a board deck. Fire ten people, save the salary, deploy the model, declare transformation.
+
+What gets left out of the deck is the failure mode. The model that worked in the pilot fails on the long tail. The ops team takes the tail manually. Customer experience degrades. The savings show up on one ledger and the costs show up on another. By the time anyone connects the two, the consultant has already invoiced.
+
+## The operator version
+
+When I shipped the kill-switch flag for my own agent cluster this month, the work it enabled is not work somebody used to do. It is work that did not happen at all before, because no human had the bandwidth.
+
+Same story for the publish_events table I added this week. Every outbound send now lands in Postgres with timestamp, channel, audience, payload, approver. Before that table existed, governance was a story I told after an incident. Now governance is a query. No headcount displaced. New capability shipped.
+
+## The honest framing
+
+AI is not a cheaper version of headcount. It is a different kind of capacity, and the operators who frame it that way get to keep their team and grow their surface area at the same time.
+
+The operators who frame it as headcount arbitrage end up paying for the model, paying for the consultant, and paying their remaining team overtime to absorb the long tail the model cannot handle.
+
+Pick the framing before you sign the contract. The framing is the strategy.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="368bcf1a-3029-81b5-b73d-d353222d5b56" data-default="redo" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">86/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">LinkedIn</div>
+<div style="background:#7f1d1d;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600">DEFAULT REDO</div>
+</div>
+<a href="https://www.notion.so/The-Hidden-Costs-That-Are-Undermining-Enterprise-AI-ROI-368bcf1a302981b5b73dd353222d5b56" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: The Hidden Costs That Are Undermining Enterprise AI ROI</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 23 &middot; truth_trace 19 &middot; hook_quality 13 &middot; differentiator_anchor 13 &middot; structural_soundness 8 &middot; signal_density 9 &middot; cta_fit 1</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">3 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; 880-tick scout-smoke incident = verified receipt<br/>&middot; Self-implicating &#x27;shipped things that broke&#x27; = trust signal<br/>&middot; CTA = advice/imperative, not mirror</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">The hidden cost of enterprise AI is rarely the model bill. It is the meetings the model bill creates.
+
+Procurement review. Security review. Governance review. Change-management consulting. Six months of preparation to deploy something a solo operator would have shipped on a Saturday and patched on Sunday.
+
+I do not romanticize the solo path. I have shipped things that broke in public and cost me trust. One scout adapter on agentsHQ ran 880 ticks producing zero useful results before a smoke-test gate caught it. The fix took an hour. The lesson took a week.
+
+But the feedback loop is honest. I see the bug, I write the gate, the next 880 ticks cannot fail the same way. The smoke-test now lives in front of every new scout source. One incident, one permanent guardrail, no committee.
+
+The cost most enterprise teams undercount is the cost of slowness. By the time the pilot is approved, the technique is documented in 40 open-source repos and your competitor&#x27;s intern has already shipped a version of it.
+
+If you are inside a slow org, the highest-value move is to find one workflow you own end-to-end and ship the small version this month. Then write the gate that protects it. That is how trust compounds without a procurement cycle attached.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="359bcf1a-3029-8124-81ca-dfb335dae25b" data-default="approved" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">84/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">1stGen (BRAND)</div>
+</div>
+<a href="https://www.notion.so/HOOK-0-2s-Your-grandmother-was-a-better-financial-strategist-than-most-CFOs-359bcf1a3029812481cadfb335dae25b" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: HOOK (0-2s): Your grandmother was a better financial strategist than most CFOs.</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 24 &middot; truth_trace 16 &middot; hook_quality 14 &middot; differentiator_anchor 13 &middot; structural_soundness 9 &middot; signal_density 8 &middot; cta_fit 0</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">3 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; Conakry anchor correct (Guinea not Senegal)<br/>&middot; Grandmother scene = lived/cultural-bridge, not operator-tech receipt (different lens for 1stGen brand -- OK)<br/>&middot; CTA = imperative (&#x27;Stop... Start...&#x27;) generic-ish</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">My grandmother in Conakry was a better financial strategist than most CFOs I have met.
+
+She kept money in three places. A tin under the bed. A susu with the women at her market stall. And one account my grandfather did not know about.
+
+The tin was for emergencies. The susu was for opportunities. The hidden account funded the version of herself she was still becoming.
+
+Modern finance tells you to consolidate. One account. One dashboard. One number. That advice was never built for people who carry multiple obligations and multiple futures inside the same week.
+
+1stGen money is not just safety money or spending money. It is autonomy money. Money that buys you the right to say no. Money that funds who you are becoming, not just who you are.
+
+Segmenting your money by purpose is not chaos. It is clarity. Each bucket answers a different question your life is asking out loud.
+
+Stop consolidating. Start categorizing on purpose. Your grandmother already knew.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="35cbcf1a-3029-8140-8bd6-e040b6cee4fb" data-default="redo" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">82/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">LinkedIn</div>
+<div style="background:#7f1d1d;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600">DEFAULT REDO</div>
+</div>
+<a href="https://www.notion.so/Optimize-and-rewrite-this-post-idea-for-LinkedIn-and-X-Twitter-with-X-as-the-35cbcf1a302981408bd6e040b6cee4fb" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: Optimize and rewrite this post idea for LinkedIn and X (Twitter), with X as the</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 22 &middot; truth_trace 17 &middot; hook_quality 12 &middot; differentiator_anchor 14 &middot; structural_soundness 7 &middot; signal_density 9 &middot; cta_fit 1</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">4 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; Concrete examples (chatbot/predictive analytics) = earned<br/>&middot; Long for LinkedIn -- compresses well but ~3000 char territory<br/>&middot; &#x27;Decoration is fine. Just do not call it transformation.&#x27; CTA = wit + sting<br/>&middot; Some overlap with item 8 (same diagnostic-first thesis)</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">Just because you can deploy AI does not mean you should.
+
+Most operators I talk to are running the wrong play. They saw a tool, they signed a contract, they pointed it at a process that was already shaky. The tool did exactly what the demo promised. The business outcome did not move.
+
+This is the most common pattern in AI right now, and almost nobody talks about it honestly.
+
+AI amplifies what is already there. Clean process plus AI equals capacity. Messy process plus AI equals more mess faster. The model does not care which one it is amplifying.
+
+A vendor will not tell you that. The vendor&#x27;s job is to sell the model. Your job is to know whether the model is pointed at the actual constraint or at the distraction next to it.
+
+I have watched leaders deploy chatbots on a sales funnel that was leaking at checkout. The bot answered questions faster. The checkout kept leaking. The team blamed the bot. The bot was fine. The diagnosis was wrong.
+
+I have watched leaders deploy predictive analytics on top of inventory data entered manually by people who did not trust the system. The predictions were sharp. The inputs were stale. The output was confident garbage.
+
+The discipline that fixes this is boring. Map the work end to end. Find where work waits. Find where customers wait. Find where revenue stops moving. That is your real constraint. AI either touches that point or it does not.
+
+If it does, scope the smallest possible cut, ship it behind an audit layer, and measure against a number you agreed on before you started.
+
+If it does not, leave AI on the shelf and fix the constraint with whatever actually moves it. Sometimes that is process redesign. Sometimes it is training. Sometimes it is a single new hire.
+
+Inside agentsHQ I built the boring infrastructure first. Write-boundaries. Kill-switch flag. Verdict-router pre-commit. Branch-guard daemon. Then I let the agents run. The boring part was the whole job. The agents were the easy part.
+
+If your AI does not move a number you agreed on before you started, it is decoration. Decoration is fine. Just do not call it transformation.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+<article data-key="35cbcf1a-3029-8154-b498-c732a262c9af" data-default="redo" style="background:#161616;padding:16px;margin-bottom:14px;border-radius:10px;border:1px solid #222">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<div style="background:#86efac;color:#000;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700">80/100</div>
+<div style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#60a5fa;font-weight:600">LinkedIn</div>
+<div style="background:#7f1d1d;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600">DEFAULT REDO</div>
+</div>
+<a href="https://www.notion.so/Optimize-and-rewrite-this-post-idea-for-LinkedIn-and-X-Twitter-with-X-as-the-35cbcf1a30298154b498c732a262c9af" target="_blank" rel="noopener" style="font-size:11px;color:#60a5fa;text-decoration:none">Notion &#8599;</a>
+</div>
+<div style="font-size:11px;color:#666;margin-bottom:10px">Topic: Optimize and rewrite this post idea for LinkedIn and X (Twitter), with X as the</div>
+<details style="margin-bottom:8px"><summary style="font-size:11px;color:#888;cursor:pointer">Breakdown</summary><div style="font-size:11px;color:#888;margin-top:4px">voice_fidelity 22 &middot; truth_trace 16 &middot; hook_quality 12 &middot; differentiator_anchor 13 &middot; structural_soundness 7 &middot; signal_density 9 &middot; cta_fit 1</div></details>
+<details open style="margin-bottom:8px"><summary style="font-size:11px;color:#fbbf24;cursor:pointer;font-weight:600">4 flag(s)</summary><div style="font-size:12px;color:#fbbf24;margin-top:4px;line-height:1.4">&middot; Goldratt named (uncredited authority OK)<br/>&middot; TOC reference -- SOP says Boubacar is NOT TOC consultant; using Goldratt as principle = fine, but borderline<br/>&middot; Length pushes LinkedIn ceiling<br/>&middot; &#x27;Fix the map&#x27; CTA = imperative, not mirror</div></details>
+<div style="font-size:15px;color:#e8e8e8;white-space:pre-wrap;background:#0a0a0a;padding:14px;border-radius:8px;border-left:3px solid #86efac;margin-bottom:12px;line-height:1.55">You can automate half your operations with AI right now. That does not mean you should.
+
+I keep ending up in the same conversation with operators. They bought a tool because it looked like progress. They wired it into a workflow that was already broken. Six months later they have a more expensive version of the original problem, plus a new dependency, plus a team that has lost trust in the next AI thing anyone proposes.
+
+The mistake is upstream of the tool choice. It is in the diagnosis step nobody runs first.
+
+Goldratt&#x27;s old idea still holds. Every operation is a chain. The chain is only as fast as the weakest link. Until you know which link is weakest, every improvement everywhere else is wasted motion. AI included.
+
+I have watched operators automate inventory tracking when the real constraint was supplier lead time. The dashboard flagged shortages faster. The shortages stayed the same. Throughput did not move.
+
+I have watched leaders automate customer support tickets when the real constraint was a confusing onboarding flow. The bot answered faster. The volume kept growing. The constraint never moved.
+
+The honest play is a one-sheet diagnostic before any tool buy. Where does work pile up. Where do customers wait. Where do your people stay late. Then ask whether AI changes that specific link or just makes the link next to it shinier.
+
+Inside agentsHQ I built the audit layer, the write-boundary, the kill-switch, and the verdict-router before I shipped a single autonomous agent. Not because that was the fun part. Because every agent that came after needed a place to land safely. The diagnostic always runs first. Even on my own stack.
+
+If your AI is pointed at the wrong link, the model is fine. The map is wrong. Fix the map.</div>
+<div style="display:flex;gap:8px">
+<button class="dec" data-d="approved" style="background:#4ade80;color:#000;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600;flex:1">Approved</button>
+<button class="dec" data-d="redo" style="background:#7f1d1d;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Redo</button>
+<button class="dec" data-d="kill" style="background:#374151;color:#fff;border:0;padding:9px 14px;border-radius:6px;font-size:14px;cursor:pointer;flex:1">Archive</button>
+</div></article>
+</main>
+<script>
+const STORE = "redo-r2-2026-05-23";
+const stored = JSON.parse(localStorage.getItem(STORE) || "null");
+const dec = stored || (() => {
+  const init = {};
+  document.querySelectorAll("article[data-key]").forEach(a => { init[a.dataset.key] = a.dataset.default; });
+  return init;
+})();
+if (!stored) localStorage.setItem(STORE, JSON.stringify(dec));
+
+function render() {
+  document.querySelectorAll("article[data-key]").forEach(a => {
+    const k = a.dataset.key;
+    const d = dec[k];
+    a.querySelectorAll(".dec").forEach(b => {
+      const active = (b.dataset.d === d);
+      b.style.outline = active ? "2px solid #fff" : "none";
+      b.style.opacity = active ? "1" : "0.55";
+    });
+  });
+}
+document.querySelectorAll(".dec").forEach(b => {
+  b.addEventListener("click", e => {
+    const a = e.target.closest("article");
+    dec[a.dataset.key] = b.dataset.d;
+    localStorage.setItem(STORE, JSON.stringify(dec));
+    render();
+  });
+});
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(dec, null, 2)], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "redo-r2-decisions-2026-05-23.json";
+  a.click();
+});
+render();
+</script>
+</body></html>

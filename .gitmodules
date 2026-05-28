@@ -19,3 +19,9 @@
 [submodule "apps/haw-preview-2026-05-17-app"]
 	path = apps/haw-preview-2026-05-17-app
 	url = https://github.com/bokar83/haw-preview-2026-05-17-app.git
+[submodule "apps/absorb-triage-2026-05-17-app"]
+	path = apps/absorb-triage-2026-05-17-app
+	url = https://github.com/bokar83/absorb-triage-2026-05-17-app.git
+[submodule "apps/brandon-orton-v6-audit-preview-app"]
+	path = apps/brandon-orton-v6-audit-preview-app
+	url = https://github.com/bokar83/brandon-orton-v6-audit-preview-app.git
