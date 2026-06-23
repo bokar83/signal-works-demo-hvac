@@ -25,3 +25,6 @@
 [submodule "apps/brandon-orton-v6-audit-preview-app"]
 	path = apps/brandon-orton-v6-audit-preview-app
 	url = https://github.com/bokar83/brandon-orton-v6-audit-preview-app.git
+[submodule "apps/groundwork-ai"]
+	path = apps/groundwork-ai
+	url = https://github.com/bokar83/groundwork-ai.git
