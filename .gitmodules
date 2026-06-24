@@ -34,3 +34,6 @@
 [submodule "websites/yatilocs-site"]
 	path = websites/yatilocs-site
 	url = https://github.com/bokar83/yatilocs-site.git
+[submodule "websites/humanatwork-site"]
+	path = websites/humanatwork-site
+	url = https://github.com/bokar83/humanatwork-site.git
