@@ -28,3 +28,9 @@
 [submodule "apps/groundwork-ai"]
 	path = apps/groundwork-ai
 	url = https://github.com/bokar83/groundwork-ai.git
+[submodule "websites/anansiworks-site"]
+	path = websites/anansiworks-site
+	url = https://github.com/bokar83/anansiworks-site.git
+[submodule "websites/yatilocs-site"]
+	path = websites/yatilocs-site
+	url = https://github.com/bokar83/yatilocs-site.git
